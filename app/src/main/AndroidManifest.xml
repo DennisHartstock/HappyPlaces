@@ -12,8 +12,16 @@
         android:theme="@style/Theme.CommCode"
         tools:targetApi="31">
         <activity
+            android:name=".AddHappyPlaceActivity"
+            android:exported="false"
+            android:label="@string/label_add_happy_place"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

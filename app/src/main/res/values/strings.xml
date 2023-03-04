@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Happy Places</string>
     <string name="cd_add_new_happy_place">add new happy place</string>
+    <string name="label_add_happy_place">Add new happy place</string>
+    <string name="et_name">Name</string>
+    <string name="et_description">Description</string>
+    <string name="et_date">Date</string>
+    <string name="et_location">Location</string>
+    <string name="tv_add_image">Add image</string>
+    <string name="btn_save">save</string>
 </resources>
