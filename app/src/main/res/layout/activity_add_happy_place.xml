@@ -92,6 +92,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/yellow"
                     android:hint="@string/et_date"
+                    android:focusableInTouchMode="false"
                     android:inputType="date"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size" />
