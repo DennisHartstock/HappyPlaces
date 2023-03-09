@@ -1,16 +1,21 @@
 package com.commcode.happyplaces
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.Settings
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.commcode.happyplaces.databinding.ActivityAddHappyPlaceBinding
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -24,6 +29,10 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
 
     private lateinit var binding: ActivityAddHappyPlaceBinding
     private var calendar = Calendar.getInstance()
+
+    companion object {
+        private const val CAMERA_REQUEST_CODE = 1
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +50,28 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
                 .setTitle("Select action")
                 .setItems(addPictureDialogItems) { _, which ->
                     when (which) {
-                        0 -> choosePhotoFromGallery()
-                        1 -> TODO()
+                        0 -> {
+                            if (ContextCompat.checkSelfPermission(
+                                    this,
+                                    Manifest.permission.MANAGE_EXTERNAL_STORAGE
+                                ) == PackageManager.PERMISSION_GRANTED
+                            ) {
+                                choosePhotoFromGallery()
+                            } else {
+                                checkPermissions()
+                            }
+                        }
+                        1 -> {
+                            if (ContextCompat.checkSelfPermission(
+                                    this,
+                                    Manifest.permission.CAMERA
+                                ) == PackageManager.PERMISSION_GRANTED
+                            ) {
+                                capturePhoto()
+                            } else {
+                                checkPermissions()
+                            }
+                        }
                     }
                 }
                 .show()
@@ -50,9 +79,29 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
     }
 
     private fun choosePhotoFromGallery() {
+        TODO("Not yet implemented")
+    }
+
+    private fun capturePhoto() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(intent, CAMERA_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == CAMERA_REQUEST_CODE) {
+                val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap
+                binding.ivImage.setImageBitmap(thumbnail)
+            }
+        }
+    }
+
+    private fun checkPermissions() {
         val storagePermissions = listOf(
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
         )
         Dexter
             .withContext(this)
@@ -88,7 +137,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
         if (report!!.areAllPermissionsGranted()) {
             Toast.makeText(
                 this@AddHappyPlaceActivity,
-                "Storage Permissions are granted",
+                "Permissions are granted",
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -104,7 +153,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
     private fun showRationalDialogForPermissions() {
         AlertDialog.Builder(this)
             .setMessage(
-                "It looks like you have turned off Storage Permissions required " +
+                "It looks like you have turned off Storage or Camera Permissions required " +
                         "for this feature. It can be enabled under the Application Settings"
             )
             .setPositiveButton("go to application settings") { _, _ ->
