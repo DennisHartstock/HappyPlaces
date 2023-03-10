@@ -22,6 +22,7 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,7 +32,8 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
     private var calendar = Calendar.getInstance()
 
     companion object {
-        private const val CAMERA_REQUEST_CODE = 1
+        private const val GALLERY = 1
+        private const val CAMERA_REQUEST_CODE = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +81,8 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
     }
 
     private fun choosePhotoFromGallery() {
-        TODO("Not yet implemented")
+        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(galleryIntent, GALLERY)
     }
 
     private fun capturePhoto() {
@@ -87,10 +90,28 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
         startActivityForResult(intent, CAMERA_REQUEST_CODE)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == CAMERA_REQUEST_CODE) {
+            if (requestCode == GALLERY) {
+                if (data != null) {
+                    val contentUri = data.data
+                    try {
+                        val selectedBitmap =
+                            MediaStore.Images.Media.getBitmap(contentResolver, contentUri)
+                        binding.ivImage.setImageBitmap(selectedBitmap)
+                        binding.ivImage.rotation = 90f
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                        Toast.makeText(
+                            this,
+                            "Failed to load the image from gallery",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            } else if (requestCode == CAMERA_REQUEST_CODE) {
                 val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap
                 binding.ivImage.setImageBitmap(thumbnail)
             }
@@ -135,11 +156,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
 
     override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
         if (report!!.areAllPermissionsGranted()) {
-            Toast.makeText(
-                this@AddHappyPlaceActivity,
-                "Permissions are granted",
-                Toast.LENGTH_SHORT
-            ).show()
+            choosePhotoFromGallery()
         }
     }
 
