@@ -1,4 +1,4 @@
-package com.commcode.happyplaces
+package com.commcode.happyplaces.activities
 
 import android.content.Intent
 import android.os.Bundle

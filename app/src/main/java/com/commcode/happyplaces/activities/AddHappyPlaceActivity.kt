@@ -1,4 +1,4 @@
-package com.commcode.happyplaces
+package com.commcode.happyplaces.activities
 
 import android.Manifest
 import android.app.Activity
@@ -33,6 +33,9 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
 
     private lateinit var binding: ActivityAddHappyPlaceBinding
     private var calendar = Calendar.getInstance()
+    private var imageUri: Uri? = null
+    private var mLatitude = 0.0
+    private var mLongitude = 0.0
 
     companion object {
         private const val GALLERY = 1
@@ -82,6 +85,10 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
                 }
                 .show()
         }
+
+        binding.btnSave.setOnClickListener {
+            TODO("Save the DataModel to the Database")
+        }
     }
 
     private fun saveImageToInternalStorage(bitmap: Bitmap): Uri {
@@ -119,7 +126,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
                     try {
                         val selectedBitmap =
                             MediaStore.Images.Media.getBitmap(contentResolver, contentUri)
-                        saveImageToInternalStorage(selectedBitmap)
+                        imageUri = saveImageToInternalStorage(selectedBitmap)
                         binding.ivImage.setImageBitmap(selectedBitmap)
                     } catch (e: IOException) {
                         e.printStackTrace()
@@ -132,7 +139,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
                 }
             } else if (requestCode == CAMERA_REQUEST_CODE) {
                 val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap
-                saveImageToInternalStorage(thumbnail)
+                imageUri = saveImageToInternalStorage(thumbnail)
                 binding.ivImage.setImageBitmap(thumbnail)
             }
         }
