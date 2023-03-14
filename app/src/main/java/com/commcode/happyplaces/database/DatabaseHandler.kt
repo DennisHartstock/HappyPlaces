@@ -12,7 +12,7 @@ class DatabaseHandler(context: Context) :
     companion object {
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "HappyPlacesDatabase"
-        private const val TABLE_HAPPY_PLACES = "happy_places_table"
+        private const val TABLE_HAPPY_PLACES = "HappyPlacesTable"
 
         private const val KEY_ID = "_id"
         private const val KEY_TITLE = "title"
@@ -26,7 +26,8 @@ class DatabaseHandler(context: Context) :
 
     override fun onCreate(db: SQLiteDatabase?) {
         val CREATE_HAPPY_PLACES_TABLE =
-            ("CREATE " + TABLE_HAPPY_PLACES + " " + KEY_ID + " INTEGER PRIMARY KEY,"
+            ("CREATE " + TABLE_HAPPY_PLACES + "("
+                    + KEY_ID + " INTEGER PRIMARY KEY,"
                     + KEY_TITLE + " TEXT,"
                     + KEY_IMAGE + " TEXT,"
                     + KEY_DESCRIPTION + " TEXT,"

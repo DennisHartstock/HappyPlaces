@@ -17,7 +17,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.commcode.happyplaces.database.DatabaseHandler
 import com.commcode.happyplaces.databinding.ActivityAddHappyPlaceBinding
+import com.commcode.happyplaces.models.HappyPlaceModel
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -33,7 +35,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
 
     private lateinit var binding: ActivityAddHappyPlaceBinding
     private var calendar = Calendar.getInstance()
-    private var imageUri: Uri? = null
+    private var locationImage: Uri? = null
     private var mLatitude = 0.0
     private var mLongitude = 0.0
 
@@ -87,7 +89,42 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
         }
 
         binding.btnSave.setOnClickListener {
-            TODO("Save the DataModel to the Database")
+            when {
+                binding.etTitle.text.isNullOrEmpty() -> {
+                    Toast.makeText(this, "Please enter the title", Toast.LENGTH_SHORT).show()
+                }
+                binding.etDescription.text.isNullOrEmpty() -> {
+                    Toast.makeText(this, "Please enter the description", Toast.LENGTH_SHORT).show()
+                }
+                binding.etLocation.text.isNullOrEmpty() -> {
+                    Toast.makeText(this, "Please enter the location", Toast.LENGTH_SHORT).show()
+                }
+                locationImage == null -> {
+                    Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    val happyPlaceModel = HappyPlaceModel(
+                        0,
+                        binding.etTitle.text.toString(),
+                        locationImage.toString(),
+                        binding.etDescription.text.toString(),
+                        binding.etDate.text.toString(),
+                        binding.etLocation.text.toString(),
+                        mLatitude,
+                        mLongitude
+                    )
+                    val dbHandler = DatabaseHandler(this)
+                    val addHappyPlace = dbHandler.addHappyPlace(happyPlaceModel)
+                    if (addHappyPlace > 0) {
+                        Toast.makeText(
+                            this,
+                            "The happy place details inserted successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        finish()
+                    }
+                }
+            }
         }
     }
 
@@ -126,7 +163,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
                     try {
                         val selectedBitmap =
                             MediaStore.Images.Media.getBitmap(contentResolver, contentUri)
-                        imageUri = saveImageToInternalStorage(selectedBitmap)
+                        locationImage = saveImageToInternalStorage(selectedBitmap)
                         binding.ivImage.setImageBitmap(selectedBitmap)
                     } catch (e: IOException) {
                         e.printStackTrace()
@@ -139,7 +176,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
                 }
             } else if (requestCode == CAMERA_REQUEST_CODE) {
                 val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap
-                imageUri = saveImageToInternalStorage(thumbnail)
+                locationImage = saveImageToInternalStorage(thumbnail)
                 binding.ivImage.setImageBitmap(thumbnail)
             }
         }
