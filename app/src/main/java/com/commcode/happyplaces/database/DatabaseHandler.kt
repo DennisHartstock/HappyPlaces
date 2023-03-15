@@ -1,10 +1,13 @@
 package com.commcode.happyplaces.database
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.commcode.happyplaces.models.HappyPlaceModel
+import java.sql.SQLException
 
 class DatabaseHandler(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -58,5 +61,37 @@ class DatabaseHandler(context: Context) :
         val result = db.insert(TABLE_HAPPY_PLACES, null, contentValues)
         db.close()
         return result
+    }
+
+
+    @SuppressLint("Range")
+    fun getHappyPlacesList(): ArrayList<HappyPlaceModel> {
+        val happyPlacesList = ArrayList<HappyPlaceModel>()
+        val selectQuery = "SELECT * FROM $TABLE_HAPPY_PLACES"
+        val db = this.readableDatabase
+
+        try {
+            val cursor: Cursor = db.rawQuery(selectQuery, null)
+            if (cursor.moveToFirst()) {
+                do {
+                    val happyPlace = HappyPlaceModel(
+                        id = cursor.getInt(cursor.getColumnIndex(KEY_ID)),
+                        title = cursor.getString(cursor.getColumnIndex(KEY_TITLE)),
+                        image = cursor.getString(cursor.getColumnIndex(KEY_IMAGE)),
+                        description = cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)),
+                        date = cursor.getString(cursor.getColumnIndex(KEY_DATE)),
+                        location = cursor.getString(cursor.getColumnIndex(KEY_LOCATION)),
+                        latitude = cursor.getDouble(cursor.getColumnIndex(KEY_LATITUDE)),
+                        longitude = cursor.getDouble(cursor.getColumnIndex(KEY_LONGITUDE))
+                    )
+                    happyPlacesList.add(happyPlace)
+                } while (cursor.moveToNext())
+            }
+            cursor.close()
+        } catch (e: SQLException) {
+            db.execSQL(selectQuery)
+            return ArrayList()
+        }
+        return happyPlacesList
     }
 }
