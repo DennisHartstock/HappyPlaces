@@ -6,6 +6,22 @@
     android:background="@color/red"
     tools:context=".activities.MainActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvHappyPlacesList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvHappyPlacesList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/tv_no_happy_places_found"
+        android:textColor="@color/gold"
+        android:textSize="@dimen/text_size" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:id="@+id/fabAddHappyPlace"
