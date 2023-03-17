@@ -51,6 +51,8 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
         val view = binding.root
         setContentView(view)
 
+        binding.ivImage.clipToOutline = true
+
         binding.etDate.setOnClickListener { getDate() }
 
         binding.tvAddImage.setOnClickListener {
