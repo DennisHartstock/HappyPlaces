@@ -2,10 +2,12 @@ package com.commcode.happyplaces.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.commcode.happyplaces.adapters.HappyPlacesAdapter
 import com.commcode.happyplaces.database.DatabaseHandler
 import com.commcode.happyplaces.databinding.ActivityMainBinding
+import com.commcode.happyplaces.models.HappyPlaceModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,14 +27,24 @@ class MainActivity : AppCompatActivity() {
         getHappyPlacesListFromLocalDb()
     }
 
+    private fun setupHappyPlacesRecyclerView(list: ArrayList<HappyPlaceModel>) {
+        binding.rvHappyPlacesList.setHasFixedSize(true)
+        binding.rvHappyPlacesList.adapter = HappyPlacesAdapter(list)
+    }
+
     private fun getHappyPlacesListFromLocalDb() {
         val dbHandler = DatabaseHandler(this)
         val happyPlacesList = dbHandler.getHappyPlacesList()
 
         if (happyPlacesList.isNotEmpty()) {
             for (happyPlace in happyPlacesList) {
-                Log.i("Title", happyPlace.title)
+                binding.tvEmptyList.visibility = View.GONE
+                binding.rvHappyPlacesList.visibility = View.VISIBLE
+                setupHappyPlacesRecyclerView(happyPlacesList)
             }
+        } else {
+            binding.tvEmptyList.visibility = View.VISIBLE
+            binding.rvHappyPlacesList.visibility = View.GONE
         }
     }
 }
