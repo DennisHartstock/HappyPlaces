@@ -98,6 +98,9 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
                 binding.etDescription.text.isNullOrEmpty() -> {
                     Toast.makeText(this, "Please enter the description", Toast.LENGTH_SHORT).show()
                 }
+                binding.etDate.text.isNullOrEmpty() -> {
+                    Toast.makeText(this, "Please select the date", Toast.LENGTH_SHORT).show()
+                }
                 binding.etLocation.text.isNullOrEmpty() -> {
                     Toast.makeText(this, "Please enter the location", Toast.LENGTH_SHORT).show()
                 }

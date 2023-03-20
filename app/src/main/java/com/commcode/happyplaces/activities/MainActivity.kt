@@ -27,6 +27,11 @@ class MainActivity : AppCompatActivity() {
         getHappyPlacesListFromLocalDb()
     }
 
+    override fun onResume() {
+        super.onResume()
+        getHappyPlacesListFromLocalDb()
+    }
+
     private fun setupHappyPlacesRecyclerView(list: ArrayList<HappyPlaceModel>) {
         binding.rvHappyPlacesList.setHasFixedSize(true)
         binding.rvHappyPlacesList.adapter = HappyPlacesAdapter(list)
