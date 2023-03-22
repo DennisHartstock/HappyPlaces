@@ -9,7 +9,7 @@ import com.commcode.happyplaces.database.DatabaseHandler
 import com.commcode.happyplaces.databinding.ActivityMainBinding
 import com.commcode.happyplaces.models.HappyPlaceModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), HappyPlacesAdapter.OnItemClickListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupHappyPlacesRecyclerView(list: ArrayList<HappyPlaceModel>) {
         binding.rvHappyPlacesList.setHasFixedSize(true)
-        binding.rvHappyPlacesList.adapter = HappyPlacesAdapter(list)
+        binding.rvHappyPlacesList.adapter = HappyPlacesAdapter(list, this)
     }
 
     private fun getHappyPlacesListFromLocalDb() {
@@ -51,5 +51,10 @@ class MainActivity : AppCompatActivity() {
             binding.tvEmptyList.visibility = View.VISIBLE
             binding.rvHappyPlacesList.visibility = View.GONE
         }
+    }
+
+    override fun onItemClick(position: Int) {
+        val intent = Intent(this, HappyPlaceDetailActivity::class.java)
+        startActivity(intent)
     }
 }

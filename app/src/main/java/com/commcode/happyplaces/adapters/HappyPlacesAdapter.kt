@@ -9,12 +9,23 @@ import com.commcode.happyplaces.models.HappyPlaceModel
 
 class HappyPlacesAdapter(
     private val list: ArrayList<HappyPlaceModel>,
+    private val listener: OnItemClickListener,
 ) : RecyclerView.Adapter<HappyPlacesAdapter.ViewHolder>() {
+
 
     inner class ViewHolder(binding: ItemHappyPlaceBinding) : RecyclerView.ViewHolder(binding.root) {
         val image = binding.ivHappyPlace
         val title = binding.tvTitle
         val description = binding.tvDescription
+
+        init {
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    listener.onItemClick(position)
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,4 +50,7 @@ class HappyPlacesAdapter(
         holder.description.text = model.description
     }
 
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
+    }
 }

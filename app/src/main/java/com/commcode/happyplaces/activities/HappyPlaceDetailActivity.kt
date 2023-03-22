@@ -12,5 +12,7 @@ class HappyPlaceDetailActivity : AppCompatActivity() {
         binding = ActivityHappyPlaceDetailBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        binding.ivDetailHappyPlace.clipToOutline = true
     }
 }
