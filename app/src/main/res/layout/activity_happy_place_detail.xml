@@ -7,11 +7,16 @@
     android:background="@color/red"
     tools:context=".activities.HappyPlaceDetailActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tbHappyPlaceDetail"
+    <TextView
+        android:id="@+id/tvHappyPlaceTitle"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:theme="@style/Theme.CommCode"
+        android:gravity="center"
+        android:textColor="@color/gold"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="Title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,32 +32,31 @@
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvDetailTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:gravity="center"
-        android:padding="16dp"
-        android:textColor="@color/gold"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivDetailHappyPlace"
-        tools:text="Detail Title" />
+        app:layout_constraintTop_toBottomOf="@id/tvHappyPlaceTitle" />
 
     <TextView
         android:id="@+id/tvDetailDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:textColor="@color/gold"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvDetailTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivDetailHappyPlace"
         tools:text="Detail Description" />
+
+    <TextView
+        android:id="@+id/tvDetailLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textColor="@color/gold"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDetailDescription"
+        tools:text="Detail Location" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

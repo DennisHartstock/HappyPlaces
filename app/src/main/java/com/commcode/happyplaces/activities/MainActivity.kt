@@ -53,8 +53,13 @@ class MainActivity : AppCompatActivity(), HappyPlacesAdapter.OnItemClickListener
         }
     }
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int, model: HappyPlaceModel) {
         val intent = Intent(this, HappyPlaceDetailActivity::class.java)
+        intent.putExtra(EXTRA_HAPPY_PLACE_DETAILS, model)
         startActivity(intent)
+    }
+
+    companion object {
+        const val EXTRA_HAPPY_PLACE_DETAILS = "happy place details"
     }
 }

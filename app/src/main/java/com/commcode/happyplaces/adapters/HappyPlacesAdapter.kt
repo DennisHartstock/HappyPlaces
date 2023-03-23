@@ -17,15 +17,6 @@ class HappyPlacesAdapter(
         val image = binding.ivHappyPlace
         val title = binding.tvTitle
         val description = binding.tvDescription
-
-        init {
-            itemView.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    listener.onItemClick(position)
-                }
-            }
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -48,9 +39,13 @@ class HappyPlacesAdapter(
         holder.image.setImageURI(Uri.parse(model.image))
         holder.title.text = model.title
         holder.description.text = model.description
+
+        holder.itemView.setOnClickListener {
+            listener.onItemClick(position, model)
+        }
     }
 
     interface OnItemClickListener {
-        fun onItemClick(position: Int)
+        fun onItemClick(position: Int, model: HappyPlaceModel)
     }
 }
