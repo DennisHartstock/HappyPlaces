@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.commcode.happyplaces.R
 import com.commcode.happyplaces.database.DatabaseHandler
 import com.commcode.happyplaces.databinding.ActivityAddHappyPlaceBinding
 import com.commcode.happyplaces.models.HappyPlaceModel
@@ -39,6 +40,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
     private var mLatitude = 0.0
     private var mLongitude = 0.0
 
+    private var happyPlaceModel: HappyPlaceModel? = null
     companion object {
         private const val GALLERY = 1
         private const val CAMERA_REQUEST_CODE = 2
@@ -50,6 +52,27 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
         binding = ActivityAddHappyPlaceBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        if (intent.hasExtra(MainActivity.EXTRA_HAPPY_PLACE_DETAILS)) {
+            happyPlaceModel =
+                intent.getParcelableExtra(MainActivity.EXTRA_HAPPY_PLACE_DETAILS) as HappyPlaceModel?
+        }
+
+        if (happyPlaceModel != null) {
+            supportActionBar?.title = "Edit happy place"
+
+            binding.etTitle.setText(happyPlaceModel!!.title)
+            binding.etDescription.setText(happyPlaceModel!!.description)
+            binding.etDate.setText(happyPlaceModel!!.date)
+            binding.etLocation.setText(happyPlaceModel!!.location)
+            mLatitude = happyPlaceModel!!.latitude!!
+            mLongitude = happyPlaceModel!!.longitude!!
+
+            locationImage = Uri.parse(happyPlaceModel!!.image)
+            binding.ivImage.setImageURI(locationImage)
+
+            binding.btnSave.text = getString(R.string.btn_update)
+        }
 
         binding.ivImage.clipToOutline = true
 
