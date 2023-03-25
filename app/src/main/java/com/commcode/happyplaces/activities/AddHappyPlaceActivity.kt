@@ -40,7 +40,8 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
     private var mLatitude = 0.0
     private var mLongitude = 0.0
 
-    private var happyPlaceModel: HappyPlaceModel? = null
+    private var updateModel: HappyPlaceModel? = null
+
     companion object {
         private const val GALLERY = 1
         private const val CAMERA_REQUEST_CODE = 2
@@ -54,21 +55,21 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
         setContentView(view)
 
         if (intent.hasExtra(MainActivity.EXTRA_HAPPY_PLACE_DETAILS)) {
-            happyPlaceModel =
+            updateModel =
                 intent.getParcelableExtra(MainActivity.EXTRA_HAPPY_PLACE_DETAILS) as HappyPlaceModel?
         }
 
-        if (happyPlaceModel != null) {
+        if (updateModel != null) {
             supportActionBar?.title = "Edit happy place"
 
-            binding.etTitle.setText(happyPlaceModel!!.title)
-            binding.etDescription.setText(happyPlaceModel!!.description)
-            binding.etDate.setText(happyPlaceModel!!.date)
-            binding.etLocation.setText(happyPlaceModel!!.location)
-            mLatitude = happyPlaceModel!!.latitude!!
-            mLongitude = happyPlaceModel!!.longitude!!
+            binding.etTitle.setText(updateModel!!.title)
+            binding.etDescription.setText(updateModel!!.description)
+            binding.etDate.setText(updateModel!!.date)
+            binding.etLocation.setText(updateModel!!.location)
+            mLatitude = updateModel!!.latitude!!
+            mLongitude = updateModel!!.longitude!!
 
-            locationImage = Uri.parse(happyPlaceModel!!.image)
+            locationImage = Uri.parse(updateModel!!.image)
             binding.ivImage.setImageURI(locationImage)
 
             binding.btnSave.text = getString(R.string.btn_update)
@@ -132,7 +133,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
                 }
                 else -> {
                     val happyPlaceModel = HappyPlaceModel(
-                        0,
+                        if (updateModel == null) 0 else updateModel!!.id,
                         binding.etTitle.text.toString(),
                         locationImage.toString(),
                         binding.etDescription.text.toString(),
@@ -142,14 +143,26 @@ class AddHappyPlaceActivity : AppCompatActivity(), MultiplePermissionsListener {
                         mLongitude
                     )
                     val dbHandler = DatabaseHandler(this)
-                    val addHappyPlace = dbHandler.addHappyPlace(happyPlaceModel)
-                    if (addHappyPlace > 0) {
-                        Toast.makeText(
-                            this,
-                            "The happy place details inserted successfully",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        finish()
+                    if (updateModel != null) {
+                        val updateHappyPlace = dbHandler.updateHappyPlace(happyPlaceModel)
+                        if (updateHappyPlace > 0) {
+                            Toast.makeText(
+                                this,
+                                "The happy place details updated successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            finish()
+                        }
+                    } else {
+                        val addHappyPlace = dbHandler.addHappyPlace(happyPlaceModel)
+                        if (addHappyPlace > 0) {
+                            Toast.makeText(
+                                this,
+                                "The happy place details inserted successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            finish()
+                        }
                     }
                 }
             }

@@ -48,7 +48,6 @@ class MainActivity : AppCompatActivity(), HappyPlacesAdapter.OnItemClickListener
                     HAPPY_PLACE_REQUEST_CODE
                 )
             }
-
         }
 
         val editItemTouchHelper = ItemTouchHelper(editSwipeHandler)
