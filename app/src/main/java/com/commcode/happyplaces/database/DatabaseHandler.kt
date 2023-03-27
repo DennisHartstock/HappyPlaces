@@ -46,6 +46,13 @@ class DatabaseHandler(context: Context) :
         onCreate(db)
     }
 
+    fun deleteHappyPlace(happyPlace: HappyPlaceModel): Int {
+        val db = this.writableDatabase
+        val result = db.delete(TABLE_HAPPY_PLACES, KEY_ID + "=" + happyPlace.id, null)
+        db.close()
+        return result
+    }
+
     fun addHappyPlace(happyPlace: HappyPlaceModel): Long {
         val db = this.writableDatabase
 
